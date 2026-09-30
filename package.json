@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:api": "python -m uvicorn api.index:app --reload --port 8000",
+    "dev:all": "concurrently -n \"API,VITE\" -c \"blue,green\" \"npm run dev:api\" \"npm run dev\"",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -17,6 +19,7 @@
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^10.0.5",
     "vite": "^5.1.6"
   }
 }
