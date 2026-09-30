@@ -1,6 +1,6 @@
 # Task & Notes Hub
 
-A full-stack productivity web application built with **FastAPI** (Python) and **React** (Vite), featuring persistent SQLite/PostgreSQL storage and a dual-tab interface for managing Todo items and Notes.
+A full-stack productivity web application built with **FastAPI** (Python) and **React** (Vite), featuring self-contained **SQLite** storage and a dual-tab interface for managing Todo items and Notes.
 
 ---
 
@@ -11,7 +11,7 @@ A full-stack productivity web application built with **FastAPI** (Python) and **
   - **Notes**: Create notes with categories (Work, Ideas, Personal, Study, General), edit notes, remove notes, filter by category, and search in titles/content.
 - **Backend API**:
   - Built with FastAPI and SQLAlchemy ORM.
-  - Supports SQLite for local dev and PostgreSQL (e.g. Supabase / Neon) for cloud/serverless deployments.
+  - Completely self-contained SQLite database with zero external service dependencies.
   - Interactive Swagger documentation available at `/docs`.
 - **Modern UI**:
   - Clean responsive design with Lucide icons.
@@ -29,7 +29,7 @@ todo-list/
 ├── api/
 │   └── index.py          # Vercel serverless entry point
 ├── backend/
-│   ├── database.py       # SQLAlchemy engine and session setup
+│   ├── database.py       # SQLAlchemy engine and session setup (SQLite)
 │   ├── models.py         # Todo and Note database models
 │   ├── schemas.py        # Pydantic schemas for request & response validation
 │   ├── main.py           # FastAPI app and API endpoints
@@ -110,16 +110,13 @@ todo-list/
 
 ---
 
-## ☁️ Deploying to Vercel
+## ☁️ Deployment Notes
 
-### Unified Full-Stack Deployment (Frontend + Serverless API)
-1. Push this repository to GitHub (already completed).
-2. Go to [vercel.com](https://vercel.com) and import the `todo-list` repository.
-3. Keep default settings (`vercel.json` handles the build and routing automatically).
-4. **Database Configuration for Serverless**:
-   - By default on Vercel, SQLite writes to `/tmp/app.db` (ephemeral across cold starts).
-   - For permanent persistence on Vercel, connect a free hosted PostgreSQL database:
-     - Create a database on [Supabase](https://supabase.com) or [Neon](https://neon.tech).
-     - In Vercel Project Settings -> **Environment Variables**, add:
-       - `DATABASE_URL`: `postgresql://<user>:<password>@<host>:<port>/<dbname>`
-5. Click **Deploy**!
+### Deploying to Vercel
+The repository includes `vercel.json` and `api/index.py` for deploying on Vercel without any external services:
+1. Push this repository to GitHub.
+2. Go to [vercel.com](https://vercel.com) and import the repository.
+3. Click **Deploy**.
+
+> **Note on Vercel & SQLite**:
+> Because Vercel serverless functions have a read-only filesystem, the backend writes SQLite to `/tmp/app.db`. On Vercel, the app will run and function properly, but keep in mind that serverless instances are ephemeral (they reset when the container goes cold). For permanent persistent SQLite on disk, you can also host the backend on a persistent container service (like Render or Railway).
